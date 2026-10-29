@@ -186,6 +186,9 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07);pad
 .wa-float:hover{background:#17924b;}
 .form-error{color:#ff9b8a;font-size:13px;margin-top:10px;display:none;}
 .form-success a{color:var(--orange-400);text-decoration:underline;}
+.gform{width:100%;height:min(640px,68vh);border:0;border-radius:8px;background:#fff;}
+.form-alt{margin-top:14px;font-size:14px;color:var(--steel-200);text-align:center;}
+.form-alt a{color:var(--orange-400);text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -596,35 +599,9 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07);pad
 
     <div id="formView">
       <h3 id="modalTitle">Request a Transport Quote</h3>
-      <p class="modal-sub">Fill in the details and our team will contact you shortly.</p>
-      <form id="quoteForm" novalidate>
-        <div class="form-group">
-          <label for="qName">Full Name *</label>
-          <input type="text" id="qName" placeholder="Your full name" required>
-        </div>
-        <div class="form-group">
-          <label for="qPhone">Phone Number *</label>
-          <input type="tel" id="qPhone" placeholder="+91 XXXXX XXXXX" required>
-        </div>
-        <div class="form-group">
-          <label for="qEmail">Email</label>
-          <input type="email" id="qEmail" placeholder="you@company.com">
-        </div>
-        <div class="form-group">
-          <label for="qCargo">Cargo Type</label>
-          <select id="qCargo">
-            <option>Crude Oil</option>
-            <option>Chemicals / Hazardous Material</option>
-            <option>Other Petroleum Product</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="qDetails">Shipment Details</label>
-          <textarea id="qDetails" placeholder="Pickup location, destination, volume, timeline…"></textarea>
-        </div>
-        <button type="submit" class="btn btn-orange">Send Quote Request</button>
-        <p class="form-error" id="formError" role="alert"></p>
-      </form>
+      <p class="modal-sub">Fill in the form below and our team will contact you shortly.</p>
+      <iframe class="gform" src="https://docs.google.com/forms/d/e/1FAIpQLSdscPM4V-q-SRIk87WGRtOzFGqsZdYGz7aAwQvG1WLO58yOTw/viewform?embedded=true" title="Request a transport quote" loading="lazy">Loading…</iframe>
+      <p class="form-alt">Prefer to talk? <a href="tel:+918826244213">Call +91 88262 44213</a> or <a href="https://wa.me/918826244213" target="_blank" rel="noopener">WhatsApp us</a>.</p>
     </div>
 
     <div class="form-success" id="successView">
@@ -661,13 +638,11 @@ const overlay     = document.getElementById('modalOverlay');
 const closeBtn    = document.getElementById('modalClose');
 const formView    = document.getElementById('formView');
 const successView = document.getElementById('successView');
-const form        = document.getElementById('quoteForm');
 
 function openModal() {
   overlay.classList.add('open');
   formView.style.display = 'block';
   successView.classList.remove('show');
-  form.reset();
   document.body.style.overflow = 'hidden';
   closeBtn.focus();
 }
@@ -680,27 +655,6 @@ document.querySelectorAll('[data-open-modal]').forEach(btn => btn.addEventListen
 closeBtn.addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const v = id => document.getElementById(id).value.trim();
-  const err = document.getElementById('formError');
-  const digits = v('qPhone').replace(/\D/g,'');
-  if (!v('qName') || digits.length < 10) {
-    err.textContent = 'Enter your name and a valid 10-digit phone number.';
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
-  const msg = 'Quote request - Rapid RoadLines\nName: ' + v('qName') + '\nPhone: ' + v('qPhone') +
-    (v('qEmail') ? '\nEmail: ' + v('qEmail') : '') + '\nCargo: ' + v('qCargo') +
-    (v('qDetails') ? '\nDetails: ' + v('qDetails') : '');
-  const url = 'https://wa.me/918826244213?text=' + encodeURIComponent(msg);
-  document.getElementById('waRetry').href = url;
-  window.open(url, '_blank', 'noopener');
-  formView.style.display = 'none';
-  successView.classList.add('show');
-});
 
 // Smooth-scroll CTA buttons that are anchor links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
